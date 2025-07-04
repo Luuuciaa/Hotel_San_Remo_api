@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
      'rest_framework',
     'api',#Registrar la aplicacion creada
+    'drf_yasg', 
     
 ]
 
@@ -146,3 +147,4 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+    

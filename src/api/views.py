@@ -6,6 +6,8 @@ from .models import Habitacion , Reserva
 from .serializers import HabitacionSerealizers , ReservaReadSerializer
 from rest_framework.response import Response 
 from rest_framework import status
+#Permisos
+from rest_framework.permissions import IsAuthenticated ,IsAuthenticatedOrReadOnly
 
 
 # Create your views here.
@@ -38,7 +40,7 @@ def api_info(request):
     
 
 class HabitacionAPIView(APIView):
-
+    permission_classes = [IsAuthenticatedOrReadOnly] #Permite a cualquier usuario leer, pero sólo a usuarios autenticados crear.
     #PETICIÓN GET 
     #Obtenemos todas las habitaciones
     def get(self, request):
@@ -73,6 +75,7 @@ class HabitacionAPIView(APIView):
 
 
 class HabitacionDetalleAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]#Permite a cualquier usuario leer, pero sólo a usuarios autenticados crear.
     def get(self, request, id_habitacion):
         # Ir a buscar en el modelo de habitación, el registro con pk=id_habitacion
         #Verificar si existe o no
@@ -145,6 +148,7 @@ class HabitacionDetalleAPIView(APIView):
     # Gestiona peticiones GET para listar todas las reservas disponibles  y devuelve los datos en formato JSON al cliente.
 class ReservaAPIView(APIView):
        #Get hara referencia a poder gestionar peticiones HTTP del tipo GET
+       permission_classes = [IsAuthenticated] # Sólo usuarios autenticados pueden acceder
        def get(self, request,id_reserva):
         try:
             reserva = Reserva.objects.get(pk=id_reserva)

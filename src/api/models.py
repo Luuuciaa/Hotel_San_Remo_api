@@ -27,7 +27,7 @@ class Habitacion(models.Model):
     titulo = models.CharField(max_length=50, verbose_name="titulo")
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad_personas = models.IntegerField()
-    descripcion = models.TextField(null=True)
+    descripcion = models.TextField(null=True, blank=True)
     estado = models.BooleanField()
 
     def __str__(self):

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from.models import Habitacion , Reserva
 
 
-
+# Serializador para el modelo Habitacion
 class HabitacionSerealizers(serializers.ModelSerializer):
     
     class Meta:
@@ -35,7 +35,7 @@ class HabitacionSerealizers(serializers.ModelSerializer):
         return value
 
 
-
+# Serializador para mostrar datos de una reserva
 class ReservaReadSerializer(serializers.ModelSerializer):
     habitacion = HabitacionSerealizers(read_only=True)  # Anidar datos de la habitación
 

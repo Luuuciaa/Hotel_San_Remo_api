@@ -17,8 +17,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
+#DEPENDENCIAS DE YASG
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
+
+
+# Creamos la vista del esquema para la documentación Swagger
+schema_view = get_schema_view(
+openapi.Info (
+    title="Hotel San Remo Api",# Título que se mostrará en la documentación
+    default_version='v1',# Versión de la API
+    description=  'Documentación general del proyecto API REST del  Hotel San Remo '  # Descripción de la API
+),
+ public=True,# Indica si la documentación es pública 
+ permission_classes=[AllowAny]# Permite que cualquiera acceda a ver la documentación
+)
+
 
 urlpatterns = [
+    # Rutas (endpoints) para acceder a la documentación de la API
+    #Endpoints para documentacion
+      # Ruta para ver la documentación en formato Swagger
+    path('swagger/',schema_view.with_ui('swagger',cache_timeout=0)),
+    # Ruta para ver la documentación en formato ReDoc 
+    path('redoc/',schema_view.with_ui('redoc',cache_timeout=0)),
     #Endpoint para obtener el token
     path('api/token/', TokenObtainPairView.as_view()),
     #Endpoint para refrescar el token
