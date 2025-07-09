@@ -1,16 +1,18 @@
 # 🏨 Hotel San Remo API
 
-API REST desarrollada con Django y Django REST Framework para la gestión de un hotel. Permite manejar habitaciones, reservas, usuarios y administración general del Hotel San Remo.
+API REST desarrollada con Django y Django REST Framework para la gestión de un hotel. 
+Permite manejar habitaciones, reservas, usuarios y administración general del Hotel San Remo.
 
 Proyecto académico realizado por Lucía Ayelén Farrapeira como parte de la carrera *Diplomatura Universitaria En Desarrollo Web Full Stack* en UADE
 
 ---
 ## Autora
+```
 **Lucía Ayelen Farrapeira**  
 📍 San Clemente del Tuyú, Buenos Aires
 🎓 Diplomatura Universitaria En Desarrollo Web Full Stack– UADE Academy
 📅 Año: 2025
-
+```
 
 
 ## Estructura del proyecto
