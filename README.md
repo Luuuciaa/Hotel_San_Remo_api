@@ -16,12 +16,12 @@ Proyecto académico realizado por Lucía Ayelén Farrapeira como parte de la car
 ## Estructura del proyecto
 
 HOTEL_SAN_REMO_API/
-├── api/                # Lógica de la app (views, models, serializers, urls)
-├── config/             # Configuración del proyecto Django
-├── manage.py           # Comando principal
-├── requirements.txt    # Lista de dependencias
-├── db.sqlite3          # Base de datos por defecto
-└── README.md           # Este archivo
+├── api/ # Lógica de la app (views, models, serializers, urls)
+├── config/ # Configuración del proyecto Django
+├── manage.py # Comando principal
+├── requirements.txt # Lista de dependencias
+├── db.sqlite3 # Base de datos por defecto
+└── README.md # Este archivo
 
 ## 🚀 Funcionalidades principales
 
