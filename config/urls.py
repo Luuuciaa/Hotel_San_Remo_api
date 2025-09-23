@@ -21,8 +21,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshVie
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
-
-
+from django.conf.urls.static import static
+from django.conf import settings
 # Creamos la vista del esquema para la documentación Swagger
 schema_view = get_schema_view(
 openapi.Info (
@@ -36,19 +36,24 @@ openapi.Info (
 
 
 urlpatterns = [
+    
     # Rutas (endpoints) para acceder a la documentación de la API
     #Endpoints para documentacion
       # Ruta para ver la documentación en formato Swagger
     path('swagger/',schema_view.with_ui('swagger',cache_timeout=0)),
     # Ruta para ver la documentación en formato ReDoc 
     path('redoc/',schema_view.with_ui('redoc',cache_timeout=0)),
-    #Endpoint para obtener el token
-    path('api/token/', TokenObtainPairView.as_view()),
-    #Endpoint para refrescar el token
-    path('api/token/refresh/',TokenRefreshView.as_view()),
+    #Endpoint para obtener el token y así tener acceso
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+     #Endpoint para refrescar el token cuando expira y obtener uno nuevo para el acceso
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     #Estoy asociando con un prefijo 'api/' a las rutas
     #definidas en el archivo url.py de la aplicacion api 'api'
     path('api/', include('api.urls')),  
+
    
 ]
+#Para servir archivos de medios (media) en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

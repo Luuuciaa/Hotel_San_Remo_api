@@ -29,6 +29,8 @@ class Habitacion(models.Model):
     cantidad_personas = models.IntegerField()
     descripcion = models.TextField(null=True, blank=True)
     estado = models.BooleanField()
+    imagen = models.ImageField(upload_to='habitaciones/', null=True, blank=True)
+    
 
     def __str__(self):
         return f"{self.titulo} , ${self.precio}"

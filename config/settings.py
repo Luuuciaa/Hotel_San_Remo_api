@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+#Para configurar los tiempos de vida de tus tokens JWT 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,12 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      'rest_framework',
+     'rest_framework_simplejwt',
     'api',#Registrar la aplicacion creada
     'drf_yasg', 
+    'corsheaders',
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -136,15 +142,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #DJANGO REST FRAMEWORK
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.SessionAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        #Restrección para acceder a los endpoint
-        'rest_framework.permissions.IsAuthenticated',
-    ]
+REST_FRAMEWORK = { 
+    'DEFAULT_PERMISSION_CLASSES' : ( 
+        # Todas las vistas, por defecto, exigen estar autenticadas
+        'rest_framework.permissions.IsAuthenticated' , 
+    ), 
+     # El sistema de autenticación por defecto será JWT
+    'DEFAULT_AUTHENTICATION_CLASSES' : ( 
+        'rest_framework_simplejwt.authentication.JWTAuthentication' , 
+    ), 
+} 
+
+#Define la duración de los tokens
+SIMPLE_JWT = {
+    #Cuánto tiempo es válido el token de acceso
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    #Cuánto tiempo es válido el token de actualización
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
-    
+
+#Para permitir la comunicación con el frontend en React
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:5173",
+ ]
+
+# URL pública desde la cual se accederán los archivos de medios
+MEDIA_URL = '/media/'
+# Ruta en el servidor donde se guardarán físicamente los archivos subidos
+MEDIA_ROOT = BASE_DIR / 'media'

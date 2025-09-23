@@ -8,6 +8,7 @@ Proyecto académico realizado por Lucía Ayelén Farrapeira como parte de la car
 ---
 ## Autora
 
+
 **Lucía Ayelen Farrapeira**  
 📍 San Clemente del Tuyú, Buenos Aires
 🎓 Diplomatura Universitaria En Desarrollo Web Full Stack– UADE Academy

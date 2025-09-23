@@ -3,8 +3,8 @@ from.models import Habitacion , Reserva
 
 
 # Serializador para el modelo Habitacion
-class HabitacionSerealizers(serializers.ModelSerializer):
-    
+class HabitacionSerializers(serializers.ModelSerializer):
+    imagen = serializers.ImageField(use_url=True) # Devuelve la URL completa
     class Meta:
          #Relaciono al serializador con el modelo correspondiente
         model = Habitacion
@@ -37,7 +37,7 @@ class HabitacionSerealizers(serializers.ModelSerializer):
 
 # Serializador para mostrar datos de una reserva
 class ReservaReadSerializer(serializers.ModelSerializer):
-    habitacion = HabitacionSerealizers(read_only=True)  # Anidar datos de la habitación
+    habitacion = HabitacionSerializers(read_only=True)  # Anidar datos de la habitación
 
     class Meta:
         #Relaciono al serializador con el modelo correspondiente

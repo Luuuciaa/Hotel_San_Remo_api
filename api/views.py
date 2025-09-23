@@ -3,11 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponse ,JsonResponse
 from rest_framework.views import APIView
 from .models import Habitacion , Reserva
-from .serializers import HabitacionSerealizers , ReservaReadSerializer
+from .serializers import HabitacionSerializers , ReservaReadSerializer
 from rest_framework.response import Response 
 from rest_framework import status
 #Permisos
 from rest_framework.permissions import IsAuthenticated ,IsAuthenticatedOrReadOnly
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 # Create your views here.
@@ -39,8 +40,11 @@ def api_info(request):
     #return JsonResponse (habitaciones)
     
 
+#Cualquier petición a HabitacionAPIView o HabitacionDetalleAPIView requiere un token JWT válido.
+
 class HabitacionAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly] #Permite a cualquier usuario leer, pero sólo a usuarios autenticados crear.
+    permission_classes = [IsAuthenticated] # Solo para usuarios logueados con JWT  
+    authentication_classes = [JWTAuthentication] # Va a usar autenticación JWT para validar al usuario antes de permitir el acceso.
     #PETICIÓN GET 
     #Obtenemos todas las habitaciones
     def get(self, request):
@@ -48,7 +52,7 @@ class HabitacionAPIView(APIView):
         habitacion = Habitacion.objects.all()
         # Utilizar el Serializador para convertir a una representación JSON
         # many=True indica que estamos serializando una lista de objetos
-        serializer = HabitacionSerealizers(habitacion, many=True)
+        serializer = HabitacionSerializers(habitacion, many=True)
         # Devolver la lista serializada como una respuesta JSON al cliente
         return Response(serializer.data)
   
@@ -57,7 +61,7 @@ class HabitacionAPIView(APIView):
         # Obtener los datos enviados por el cliente
         datos_peticion = request.data
         # Crear un serializador con esos datos
-        serializer = HabitacionSerealizers(data=datos_peticion)
+        serializer = HabitacionSerializers(data=datos_peticion)
         # Validar los datos recibidos
         if serializer.is_valid():
             # Si son válidos, guardar en la base de datos
@@ -75,7 +79,8 @@ class HabitacionAPIView(APIView):
 
 
 class HabitacionDetalleAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]#Permite a cualquier usuario leer, pero sólo a usuarios autenticados crear.
+    permission_classes = [IsAuthenticated]# Solo para usuarios logueados con JWT  
+    authentication_classes = [JWTAuthentication] # Va a usar autenticación JWT para validar al usuario antes de permitir el acceso.
     def get(self, request, id_habitacion):
         # Ir a buscar en el modelo de habitación, el registro con pk=id_habitacion
         #Verificar si existe o no
@@ -90,7 +95,7 @@ class HabitacionDetalleAPIView(APIView):
             return Response({'error': 'Habitación no existente'}, status=status.HTTP_404_NOT_FOUND)
 
         # Si la habitación existe, se serializa y se retorna
-        serializer = HabitacionSerealizers(habitacion)
+        serializer = HabitacionSerializers(habitacion, context={'request': request})
         return Response(serializer.data)
        
        
@@ -131,7 +136,7 @@ class HabitacionDetalleAPIView(APIView):
 
          datos_peticion = request.data
          #Serializo
-         serialaizer = HabitacionSerealizers(habitacion,data=datos_peticion)
+         serialaizer = HabitacionSerializers(habitacion,data=datos_peticion)
          if serialaizer.is_valid():
              #Si se cumple las validaciones guardo el registro habitacion
              serialaizer.save()
