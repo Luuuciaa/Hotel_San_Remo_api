@@ -1,0 +1,52 @@
+# ==========================
+# ENTORNOS Y CONFIGURACIONES
+# ==========================
+venv/
+ENV/
+.env
+.docker.env
+!.env.example
+pyvenv.cfg
+
+# ==========================
+# DJANGO / PYTHON
+# ==========================
+__pycache__/
+*.py[cod]
+*.log
+*.sqlite3
+/logs/
+*/migrations/__pycache__/
+
+# ==========================
+# ARCHIVOS DE USUARIO Y DATOS
+# ==========================
+media/
+staticfiles/
+*.tmp
+
+# ==========================
+# DOCKER
+# ==========================
+mysql_san_remo_db/
+*.pid
+*.seed
+*.bak
+
+# ==========================
+# SISTEMA Y EDITORES
+# ==========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ==========================
+# REACT / FRONTEND (si lo tenés)
+# ==========================
+node_modules/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
