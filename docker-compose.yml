@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  # ---------------------------- SERVICIO DE BASE DE DATOS ---------------------------- #
+  db_san_remo: # Nombre del contenedor de MySQL
+    container_name: mysql-san-remo  # Imagen oficial de MySQL versión 8.0
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3307:3306"   # MySQL externo al host
+    volumes:
+      - mysql_san_remo_db:/var/lib/mysql # Volumen persistente para guardar los datos de MySQL
+    env_file:
+      - .docker.env    # Variables de MySQL (MYSQL_ROOT_PASSWORD, etc.)
+    networks:
+      - san-remo-network   # Red interna para que se comunique con el servicio de Django
+
+  # ---------------------------- SERVICIO DE DJANGO (API) ---------------------------- #
+  api:
+    container_name: api-san-remo       # Nombre del contenedor de Django
+    build:
+      context: . # Carpeta raíz del proyecto
+      dockerfile: ./deployments/Dockerfile  # Ruta al Dockerfile que construye la imagen de Django
+    ports:
+      - "8001:8000"   # Django server
+    env_file:
+      - .docker.env   # Variables de conexión a MySQL para Django
+    volumes:
+      - ./:/app      # Monta el proyecto local dentro del contenedor
+      - ./media:/app/media   # Carpeta para archivos subidos (media)
+      - ./logs:/app/logs   # Carpeta para guardar logs
+    depends_on:
+      - db_san_remo  # Espera a que la base de datos esté lista antes de iniciar Django
+    networks:
+      - san-remo-network   # Usa la misma red que MySQL para comunicarse
+    command: >   # Comando que se ejecuta al iniciar el contenedor
+      sh -c "
+        echo 'Esperando a que MySQL esté listo...' &&
+        sleep 10 &&
+        echo 'Ejecutando migraciones...' &&
+        python manage.py migrate &&
+        echo 'Iniciando servidor Django...' &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+# ---------------------------- VOLUMENES ---------------------------- #
+volumes:
+  mysql_san_remo_db:  # Volumen nombrado para la base de datos MySQL
+
+# ---------------------------- RED INTERNA ---------------------------- #
+networks:
+  san-remo-network:
+    driver: bridge # Tipo de red: 'bridge' (conecta los contenedores entre sí)

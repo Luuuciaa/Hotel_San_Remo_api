@@ -24,16 +24,16 @@ class Habitacion(models.Model):
         on_delete=models.CASCADE,
         related_name='habitaciones'
     )
-    titulo = models.CharField(max_length=50, verbose_name="titulo")
+    nombre = models.CharField(max_length=50, verbose_name="titulo")
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    cantidad_personas = models.IntegerField()
+    capacidad = models.IntegerField()
     descripcion = models.TextField(null=True, blank=True)
     estado = models.BooleanField()
     imagen = models.ImageField(upload_to='habitaciones/', null=True, blank=True)
     
 
     def __str__(self):
-        return f"{self.titulo} , ${self.precio}"
+        return f"{self.nombre} , ${self.precio}"
 
 
 # Modelo de reserva

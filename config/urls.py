@@ -23,6 +23,7 @@ from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
 from django.conf.urls.static import static
 from django.conf import settings
+
 # Creamos la vista del esquema para la documentación Swagger
 schema_view = get_schema_view(
 openapi.Info (
@@ -51,7 +52,7 @@ urlpatterns = [
     #Estoy asociando con un prefijo 'api/' a las rutas
     #definidas en el archivo url.py de la aplicacion api 'api'
     path('api/', include('api.urls')),  
-
+   
    
 ]
 #Para servir archivos de medios (media) en desarrollo

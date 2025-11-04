@@ -9,27 +9,35 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 #Para configurar los tiempos de vida de tus tokens JWT 
 from datetime import timedelta
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Cargar variables desde el archivo .env
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4$ob^16+4w6e&6(48!sxvx4lrzi75!gwphf&^c&ymqm$n5w139'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
 
+#Desde que dominio estoy sirviendo nuestra aplicación
+#ALLOWED_HOSTS = ["mihotel.com" ,  "127.0.0.1"]
+#ARMAR UNA LISTA EN BASE AL STRING LEIDO DEL . ENV , SEPARADO POR " , "
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # Application definition
 
@@ -48,6 +56,7 @@ INSTALLED_APPS = [
     
 ]
 
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api.middleware.SimpleLoggingMiddleware',
+     
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -82,21 +93,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'san_remo_db_django',
-        'USER': 'root',
-        'PASSWORD': '12345678',
-        'HOST': 'localhost',
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -162,11 +168,78 @@ SIMPLE_JWT = {
 }
 
 #Para permitir la comunicación con el frontend en React
-CORS_ALLOWED_ORIGINS = [
-     "http://localhost:5173",
- ]
+#CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:5173",
+ #]
 
-# URL pública desde la cual se accederán los archivos de medios
-MEDIA_URL = '/media/'
-# Ruta en el servidor donde se guardarán físicamente los archivos subidos
-MEDIA_ROOT = BASE_DIR / 'media'
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+
+
+
+### ---------------- CONFIGURACIÓN PERSONALIZADA  DE LOGGING ---------------- ###
+
+# El logger django captura advertencias y errores del framework
+
+#Indico directorio de logs dónde quiero guardar
+LOG_DIR =  BASE_DIR.parent / 'logs'
+#En caso de que no exista lo cree
+LOG_DIR.mkdir(exist_ok=True)
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Permite usar los loggers de Django
+    
+     # ---------------- FORMATOS ---------------- #
+    'formatters':{ # Define el formato del mensaje
+        'simple': {'format':"[%(levelname)s] %(name)s: %(message)s"}, # Formato simple para consola
+        'detallado' : {'format':"[%(levelname)s] %(asctime)s - %(name)s: %(message)s"}, # Formato detallado para archivos (con fecha y hora)
+       
+    },
+    # Determina dónde se envian los mensajes
+    'handlers': { 
+        'console': {
+            'class': 'logging.StreamHandler',  # muestra los logs en la consola
+            'formatter':'simple'
+
+        },
+        'file': {
+            'class': 'logging.FileHandler', #guardar los logs en archivos
+            'filename': LOG_DIR / 'hotel_san_remo_debug.log',
+            'formatter':'detallado'
+        },
+          # Guarda logs específicos de la base de datos
+        'file_db':{
+            'class':'logging.FileHandler',
+            'filename': LOG_DIR / 'consultas_db.log',
+            'formatter':'detallado'
+        },
+         # Guarda logs relacionados con errores importantes del sistema
+        'file_error': {
+            'class': 'logging.FileHandler',
+            'filename': LOG_DIR / 'errores_hotel.log',
+            'formatter': 'detallado',
+        }
+    },
+    # Define que es lo que quiere capturar y a dónde
+    # Logger principal de la aplicación del hotel
+    'loggers': {
+        'hotel_san_remo_api': {
+            'handlers': ['console', 'file','file_error'],
+            'level': 'DEBUG',  # Obtenemos info detallada
+            'propagate': True,
+        },
+        #Logger por defecto de django que registra todo lo que pasa en la app
+         # Logger general de Django
+        'django':{
+            'handlers':['console','file'],
+            'level': 'WARNING',  # Solo advertencias o errores
+        },
+        # Logger de las consultas SQL (trazabilidad de base de datos)
+        'django.db.backends':{
+            'handlers':['file_db'],
+            'level':'WARNING',  # Solo loguea si hay problemas de rendimiento
+            'propagate': True
+        },
+    } 
+}
