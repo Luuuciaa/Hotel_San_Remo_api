@@ -29,7 +29,7 @@ class Habitacion(models.Model):
     capacidad = models.IntegerField()
     descripcion = models.TextField(null=True, blank=True)
     estado = models.BooleanField()
-    imagen = models.ImageField(upload_to='habitaciones/', null=True, blank=True)
+    imagen = models.URLField(max_length=255, blank=True, null=True)
     
 
     def __str__(self):

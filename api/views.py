@@ -10,6 +10,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated ,IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+
+
 #Logging
 import logging
 #Instancia del logger de la app
@@ -63,7 +65,7 @@ class HabitacionAPIView(APIView):
         logger.info(f" Se consultó la lista de habitaciones ({len(habitacion)} encontradas).")  #len() función que se usa para obtener la cantidad de elementos de un objeto
         # Devolver la lista serializada como una respuesta JSON al cliente
         return Response(serializer.data)
-  
+
   #PETICIÓN POST   → crea una nueva habitación
     def post(self, request):
         # Obtener los datos enviados por el cliente
@@ -152,17 +154,17 @@ class HabitacionDetalleAPIView(APIView):
 
          datos_peticion = request.data
          #Serializo
-         serialaizer = HabitacionSerializers(habitacion,data=datos_peticion)
-         if serialaizer.is_valid():
+         serializer = HabitacionSerializers(habitacion,data=datos_peticion)
+         if serializer.is_valid():
              #Si se cumple las validaciones guardo el registro habitacion
-             serialaizer.save()
+             serializer.save()
              logger.info(f"Habitación ID={id_habitacion} actualizada.")
              respuesta = {
                  'mensaje':'Habitación actualizada exitosamente',
-                 'data' : serialaizer.data
+                 'data' : serializer.data
              }
              return Response(respuesta) #por defecto el codigo de status es 200
-         return Response (serialaizer.errors,status=status.HTTP_400_BAD_REQUEST)
+         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 

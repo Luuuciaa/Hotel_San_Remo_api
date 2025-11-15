@@ -11,7 +11,7 @@ services:
     volumes:
       - mysql_san_remo_db:/var/lib/mysql # Volumen persistente para guardar los datos de MySQL
     env_file:
-      - .docker.env    # Variables de MySQL (MYSQL_ROOT_PASSWORD, etc.)
+      - .env   # Variables de MySQL (MYSQL_ROOT_PASSWORD, etc.)
     networks:
       - san-remo-network   # Red interna para que se comunique con el servicio de Django
 
@@ -24,7 +24,7 @@ services:
     ports:
       - "8001:8000"   # Django server
     env_file:
-      - .docker.env   # Variables de conexión a MySQL para Django
+      - .env   # Variables de conexión a MySQL para Django
     volumes:
       - ./:/app      # Monta el proyecto local dentro del contenedor
       - ./media:/app/media   # Carpeta para archivos subidos (media)

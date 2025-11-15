@@ -4,7 +4,7 @@ import re
 
 #Funcion que verifica que el valor posee caracteres que no sean alfabeticos
 def validar_caracteres_alfabeticos(value):
-     if not re.match(r'[a-zA-Z \s] + $',value):
+     if not re.match(r'[a-zA-Z\s]+$',value):
          raise serializers.ValidationError('El valor debe ser alfabetico')
 
 
@@ -18,16 +18,17 @@ class HabitacionSerializers(serializers.ModelSerializer):
            validators = [validar_caracteres_alfabeticos]
     )
 
-    imagen = serializers.ImageField(use_url=True) # Devuelve la URL completa
+    imagen = serializers.URLField(required=False, allow_blank=True, allow_null=True) # Devuelve la URL completa
     class Meta:
          #Relaciono al serializador con el modelo correspondiente
         model = Habitacion
         #Campos que quiero serializar del modelo
         #fields= '__all__'
         #fields = ['titulo','precio','cantidad_personas','estado','descripcion']
-        fields = ['nombre' , 'precio' ,'capacidad' , 'descripcion','estado', 'imagen']
+        fields = ['hotel','id', 'nombre', 'capacidad', 'precio', 'descripcion', 'estado', 'imagen']
     
  
+
     #----------------VALIDACIONES PERSONALIZADAS DE LOS CAMPOS-------------#
 
     #Validación para el precio
@@ -51,9 +52,9 @@ class HabitacionSerializers(serializers.ModelSerializer):
     def validate_nombre(self, value):
         if value == "" :
             raise serializers.ValidationError('El nombre no puede estar vacío')
-        if value > 100 :
+        if len(value) > 100 :
             raise serializers.ValidationError('El nombre no puede superar 100 caracteres')
-        if value < 5 :
+        if len(value) < 5 :
             raise serializers.ValidationError('El nombre debe contener al menos 5 caracteres')
         
         return value
