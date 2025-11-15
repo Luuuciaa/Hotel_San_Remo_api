@@ -1,5 +1,6 @@
 # Entornos virtuales
 .env
+venv/
 .docker
 
 # Archivos de logs
