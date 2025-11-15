@@ -3,6 +3,7 @@
 venv/
 .docker
 
+
 # Archivos de logs
 logs/
 *.log

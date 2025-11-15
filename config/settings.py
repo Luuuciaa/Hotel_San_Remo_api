@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
-
+ENV = os.getenv("ENV", "development")
 
 #Desde que dominio estoy sirviendo nuestra aplicación
 #ALLOWED_HOSTS = ["mihotel.com" ,  "127.0.0.1"]
@@ -60,6 +60,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+     # IMPORTANTE PARA PRODUCCIÓN (manejo de archivos estáticos)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,10 +137,17 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# ===========================
+#  ARCHIVOS ESTÁTICOS
+# ===========================
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATIC_URL = 'static/'
+# Hace que Whitenoise sirva archivos comprimidos (Railway-friendly)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -181,7 +190,7 @@ CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 # El logger django captura advertencias y errores del framework
 
 #Indico directorio de logs dónde quiero guardar
-LOG_DIR =  BASE_DIR.parent / 'logs'
+LOG_DIR =  BASE_DIR / 'logs'
 #En caso de que no exista lo cree
 LOG_DIR.mkdir(exist_ok=True)
 
@@ -244,3 +253,11 @@ LOGGING = {
     } 
 }
 
+#SEGURIDAD PARA PROCUCCION
+if ENV =='production':
+   SECURE_SSL_REDIRECT=False
+   # Asegura cookies
+   SECURE_COOKIEE_SECURE=True
+   CSRF_COOKIE_SECURE=True
+# Evita ataques de contenido mixto
+   SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

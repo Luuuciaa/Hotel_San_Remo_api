@@ -1,5 +1,7 @@
 asgiref==3.8.1
 Django==5.2.3
+gunicorn
+whitenoise
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-yasg==1.21.10
@@ -16,3 +18,4 @@ uritemplate==4.2.0
 python-dotenv==1.0.1
 django-cors-headers==4.3.0
 Pillow==10.0.0
+
