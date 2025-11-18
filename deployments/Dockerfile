@@ -28,4 +28,6 @@ COPY . .
 # Paso 7: Exponer puerto y comando por defecto
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando de inicio (PRODUCCIÓN)
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+
