@@ -262,6 +262,3 @@ if ENV =='production':
 # Evita ataques de contenido mixto
    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CSRF_TRUSTED_ORIGINS = [
-        "https://hotelsanremoapi-production.up.railway.app"
-    ]
