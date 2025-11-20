@@ -54,15 +54,15 @@ HOTEL_SAN_REMO_API/
 
 ## 🚀 Funcionalidades principales
 
--Consultar habitaciones disponibles
--Crear, actualizar o eliminar habitaciones (solo admin)
--Crear reservas
--Consultar reservas existentes
--Autenticación de usuarios con JWT
--Docmentación de la API con Swagger
--Sistema de logs para depuración y auditoría
--Panel de administración de Django
--Preparado para deploy en Railway usando Docker
+- Consultar habitaciones disponibles
+- Crear, actualizar o eliminar habitaciones (solo admin)
+- Crear reservas
+- Consultar reservas existentes
+- Autenticación de usuarios con JWT
+- Docmentación de la API con Swagger
+- Sistema de logs para depuración y auditoría
+- Panel de administración de Django
+- Preparado para deploy en Railway usando Docker
 
 ---
 
