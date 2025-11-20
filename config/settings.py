@@ -255,9 +255,13 @@ LOGGING = {
 
 #SEGURIDAD PARA PROCUCCION
 if ENV =='production':
-   SECURE_SSL_REDIRECT=False
+   SECURE_SSL_REDIRECT=True
    # Asegura cookies
-   SECURE_COOKIEE_SECURE=True
+   SESSION_COOKIEE_SECURE=True
    CSRF_COOKIE_SECURE=True
 # Evita ataques de contenido mixto
    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = [
+        "https://hotelsanremoapi-production.up.railway.app"
+    ]
